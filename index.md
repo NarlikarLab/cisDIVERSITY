@@ -2,7 +2,7 @@
 
 <div style="background-color:#003366; text-align:center">
 <header>
-<h1><font color="#fafafa">cisDIVERSITY</font></h1>
+<!--<h1><font color="#fafafa">cisDIVERSITY</font></h1> -->
 <p><font color="#fafafa"><b>cisDIVERISTY</b> - <i>is a module discovery tool used for finding diverse sequence architectures, each one characterized by presence or absence of de novo motifs.</i></font></p>
 </header>
 
