@@ -14,7 +14,7 @@ The following packages need to be installed in order to view the output of cisDI
 
 INSTALLATION:
 
-cisDIVERSITY is freely available at https://github.com/NarlikarLab/cisDIVERSITY. Execute the following commands to download and install DIVERSITY:
+cisDIVERSITY is freely available at https://github.com/NarlikarLab/cisDIVERSITY. Execute the following commands to download and install cisDIVERSITY:
 wget https://github.com/NarlikarLab/cisDIVERSITY/archive/cisdiversity.tar.gz
 tar -xvf cisdiversity.tar.gz
 cd cisDIVERSITY
