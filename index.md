@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 
 <div style="background-color:#003366; text-align:center">
