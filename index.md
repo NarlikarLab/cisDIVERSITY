@@ -1,37 +1,48 @@
-## Welcome to GitHub Pages
+<!DOCTYPE html>
+<html>
 
-You can use the [editor on GitHub](https://github.com/NarlikarLab/cisDIVERSITY/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+<div style="background-color:#003366; text-align:center">
+<header>
+<h1><font color="#fafafa">cisDIVERSITY</font></h1>
+<p><font color="#fafafa"><b>cisDIVERISTY</b> - <i>is a module discovery tool used for finding diverse sequence architectures, each one characterized by presence or absence of de novo motifs.</i></font></p>
+</header>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+</div>
 
-```markdown
-Syntax highlighted code block
+<body bgcolor="#f5fffa">
+<font color="#000000">
+The code is primarily written in C and needs gcc with OpenMP support to compile.
 
-# Header 1
-## Header 2
-### Header 3
+<h2>Prerequisites</h2>
+<ul>
+ <li> Python 2.7+ (Not compatible with Python 3.x)</li>
+ <li> python-numpy </li>
+ <li> python-ctypes </li>
+ <li> python-re </li>
+ <li> R > 3.3 </li>
+ <li> R package corrplot </li>
+</ul>
 
-- Bulleted
-- List
+<h2>Download</h2>
+<b>NPLB</b> can be downloaded from <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz</a>. It can be run on any Mac or Linux system.
 
-1. Numbered
-2. List
+<h2>Installation</h2>
+In order to download and install <b>cisDIVERSITY</b>, execute the following steps:
+<ul>
+  <li>wget <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz</a></li>
+  <li>tar -xvf  master.tar.gz</li>
+  <li>cd cisDIVERSITY-master/</li>
+  <li>make</li>
+</ul>
 
-**Bold** and _Italic_ and `Code` text
+<h2>Contact</h2>
+For further details: <a href="mailto:l.narlikar@ncl.res.in">l.narlikar@ncl.res.in</a>
 
-[Link](url) and ![Image](src)
-```
+<h2>License</h2>
+GNU General Public License v3.0
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/NarlikarLab/cisDIVERSITY/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+</font>
+</body>
+</html>
