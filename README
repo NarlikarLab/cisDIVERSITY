@@ -16,7 +16,7 @@ INSTALLATION:
 
 cisDIVERSITY is freely available at https://github.com/NarlikarLab/cisDIVERSITY. Execute the following commands to download and install cisDIVERSITY:
 wget https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz
-tar -xvf cisDIVERSITY-1.0.tar.gz
+tar -xvf v1.0.tar.gz
 cd cisDIVERSITY-1.0
 make
 
