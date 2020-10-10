@@ -25,14 +25,14 @@ The code is primarily written in C and needs gcc with OpenMP support to compile.
 </ul>
 
 <h2>Download</h2>
-<b>NPLB</b> can be downloaded from <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz</a>. It can be run on any Mac or Linux system.
+<b>NPLB</b> can be downloaded from <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz</a>. It can be run on any Mac or Linux system.
 
 <h2>Installation</h2>
 In order to download and install <b>cisDIVERSITY</b>, execute the following steps:
 <ul>
-  <li>wget <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz</a></li>
-  <li>tar -xvf  master.tar.gz</li>
-  <li>cd cisDIVERSITY-master/</li>
+  <li>wget <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz</a></li>
+  <li>tar -xvf  v1.0.tar.gz</li>
+  <li>cd cisDIVERSITY-1.0/</li>
   <li>make</li>
 </ul>
 
