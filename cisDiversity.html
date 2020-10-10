@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+	<head>		
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="md.js"></script>
+	</head>	
+	<body>
+		<div style="margin:10px">
+			<h3>HTML output for best solution</h3>
+			<div id="output"></div>
+			<br>
+			<div style="font-family: arial">For detailed output please refer to <a href="info.txt">info.txt</a></div>
+		</div>
+		<div style="margin:10px">
+			<h3>Motifs</h3>
+			<div id="motifs"></div>
+		</div>
+		<div style="margin:10px">
+			<h3>Module Compositions </h3>
+			<div id="CirclePlot"></div>
+		</div>
+		<div style="float: left;margin:10px">
+			<h3>Full Partition</h3>
+			<div id="FullPart"></div>
+		</div>
+		<div style="float: left; margin:10px">
+			<h3>Module links</h3>
+			<div id="ModuleLinks"></div>
+		</div>
+		<script type="text/javascript">
+			var linwidth=3, size=1,noOfmotifs,noOfseqs,scrnwidth;
+			var cellpad = 2,sf;
+			scrnwidth = screen.width;
+			noOfmotifs = wholedata["motifs"];
+			noOfseqs = wholedata["totalseqs"];
+			
+			function motifLegend() {
+				function add_to_header(row,tname,width) {
+					var rh,th,title;
+					rh = row.insertCell();
+					th = document.createElement("th");
+					th.style.width = width;
+					title = document.createTextNode(""+tname);
+					th.appendChild(title);
+					th.style.fontFamily="arial";
+					rh.appendChild(th);
+					row.appendChild(rh);
+				}
+				var element2 = document.getElementById("motifs");
+				if (element2 == null){
+					document.write("No table for motif legend found!");
+				}
+				var tbl = document.createElement("table");
+				var rhead,thead,tbody,tr,td,node;
+				var maxmotifwidth = 0,i,motcolwidth,idcolwidth,noscolwidth;
+				const zeroPad = (num, places) => String(num).padStart(places, '0');
+				element2.appendChild(tbl);
+				tbl.style.textAlign="left";
+				tbl.cellPadding = cellpad+"px";
+  				thead = document.createElement("thead");
+				tbl.appendChild(thead);
+        		tbody = document.createElement("tbody");
+        		tbl.appendChild(tbody);
+        		//tbl.style.width  = '100%';
+				rhead = thead.insertRow();
+				
+				for (i=0;i<noOfmotifs;i++)
+				{
+					if (motifwidths[i]>maxmotifwidth)
+					{
+						maxmotifwidth = motifwidths[i];
+					}
+				}
+				
+				idcolwidth = Math.ceil((4.4*scrnwidth)/100); //60px
+				noscolwidth = Math.ceil(9*scrnwidth/100);
+				var wf,hf;
+				wf =((0.8*scrnwidth)-(idcolwidth + noscolwidth))/(maxmotifwidth*2);
+				hf =(wf/3.4);
+				motcolwidth = maxmotifwidth*wf;
+				add_to_header(rhead,"Motif Id",idcolwidth+"px");
+				add_to_header(rhead,"Motif",motcolwidth+"px");
+				add_to_header(rhead,"Rev comp",motcolwidth+"px");
+				add_to_header(rhead,"No of Sequences",noscolwidth+"px");
+				
+				for (i=0;i<noOfmotifs;i++)
+				{
+					motifId = i+1;
+					tr = tbody.insertRow();
+					td = tr.insertCell();
+					td.style.fontFamily="arial";
+					node = document.createTextNode("Motif "+motifId);
+					td.appendChild(node);
+					
+					td = tr.insertCell();
+					//width = motifwidths[i];
+					node = document.createElement("img");
+					node.src ="sites_"+zeroPad(motifId,2)+".png";
+					
+					node.height=logoSizes[motifId][1]*0.5;
+					node.width=logoSizes[motifId][0]*0.5;
+					td.appendChild(node);
+					
+					td = tr.insertCell();
+					//width = motifwidths[i];
+					node = document.createElement("img");
+					node.src ="revsites_"+zeroPad(motifId,2)+".png";
+					node.height=logoSizes[motifId][1]*0.5;
+					node.width=logoSizes[motifId][0]*0.5;
+					td.appendChild(node);
+					
+					td = tr.insertCell();
+					node = document.createTextNode(motifSeqs[motifId]);
+					td.style.fontFamily="arial";
+					td.appendChild(node);
+				}
+			}
+	function insertCircleplot(){
+		var moddiv;
+		var w,h,img;
+		/// Create a div element and make the imgae its child
+		w = cplot[0]*0.5;
+		h = cplot[1]*0.5;
+		if (w > (9/10)*scrnwidth){
+			var ar = w/h;
+			w = (9*(scrnwidth)/10);
+			h = w/ar;
+		}
+		moddiv = document.getElementById("CirclePlot");
+		moddiv.style.backgroundColor="#E6E6FA";
+		moddiv.style.width = w+"px";
+		moddiv.style.height = h+"px";
+		moddiv.style.border="thin solid black";
+				
+		img = document.createElement("img");
+		img.src = "circlePlot.png";
+		img.style.width = w+"px";
+		img.style.height = h+"px";
+		moddiv.appendChild(img);
+				
+	}
+	function insertFullPartition(){
+		//Create a div and insert the full partition image
+		var moddiv, w,h,img;
+		w = fullpart[0];
+		h = fullpart[1];
+		if (w > 0.5*(scrnwidth-40)){
+			var ar = w/h;
+			w = 0.35*(scrnwidth-40);
+			h = w/ar;
+		}	
+		moddiv = document.getElementById("FullPart");
+		moddiv.style.border="thin solid black";
+		moddiv.style.width = w+"px";
+		moddiv.style.height = h+"px";
+		
+		img = document.createElement("img");
+		img.src = "fullPartition.png";
+		img.style.width = w+"px";
+		img.style.height = h+"px";
+		moddiv.appendChild(img);
+		//document.write(moddiv.offsetWidth+"px");
+	}
+	function createModuleInfoTable(){
+		function add_to_header(row,tname,width){
+			var rh,th,title;
+			rh = row.insertCell();
+			th = document.createElement("th");
+			th.style.width = width;
+			title = document.createTextNode(tname);
+			th.appendChild(title);
+			//th.style.fontFamily="arial";
+			rh.appendChild(th);
+			row.appendChild(rh);
+		}
+		var div,tab,tr,td,thead,tbody,rhead;
+		var fpw,fullpart = document.getElementById("FullPart");
+		var remwidth,colwidth,mods,i,node,btn;
+		fpw = fullpart.offsetWidth;
+		div = document.getElementById("ModuleLinks");
+		div.style.border = "thin solid black";
+		tab = document.createElement("table");
+		div.appendChild(tab);
+		tab.style.textAlign = "center";
+		tab.cellPadding = "2px";
+		thead = document.createElement("thead");
+		tab.appendChild(thead);
+		tbody = document.createElement("tbody");
+		tab.appendChild(tbody);
+		rhead = thead.insertRow();
+		if (fpw < 0.5*scrnwidth){
+			remwidth = 0.5*scrnwidth ;
+		}
+		else{
+			remwidth = scrnwidth - fpw -20;
+		}
+		
+		//colwidth = remwidth/2;
+		remwidth = 0.25*(scrnwidth - 100);
+		colwidth = remwidth/2;
+		add_to_header(rhead,"Module Id",colwidth+"px");
+		add_to_header(rhead,"No. of sequences",colwidth+"px");
+		mods = Object.keys(modseqs);
+		for (i=0;i<mods.length;i++){
+			tr = tbody.insertRow();
+			td = tr.insertCell();
+			td.style.fontFamily="arial";
+			node = document.createTextNode(mods[i]);
+			td.appendChild(node);
+
+			td = tr.insertCell();
+			btn = document.createElement("BUTTON");
+			node = document.createTextNode(modseqs[mods[i]]);
+			btn.appendChild(node);
+			btn.innerHTML = modseqs[mods[i]];
+			btn.id = "Module_"+mods[i];
+			//td.id = "Module_"+mods[i];
+			td.appendChild(btn);
+		}	
+	}
+	function showTable(moddivid) {
+		return function (e){
+			window.open(moddivid+".html",'_blank');	
+		};
+	}	  
+	
+	function addOnclickEvents() {
+		var l,mods,moddiv,arrowid,moddivid;
+		var disptab;
+		mods = Object.keys(modseqs);
+		for(l=0;l<mods.length;l++){
+			moddivid = "Module_"+parseInt(mods[l]);
+			moddiv = document.getElementById(moddivid);
+			//arrowid = "arrow"+parseInt(mods[l]);
+			disptab = showTable(moddivid);
+			moddiv.addEventListener("click",disptab,false);
+		}
+	}
+	function printOutput() {
+		var op, textnode;
+		op = document.getElementById("output");
+		textnode = document.createTextNode("Output of cisDIVERSITY run on "+inputfasta);
+		op.appendChild(textnode); 
+		op.appendChild(document.createElement('br'));		
+		op.style.fontFamily = "arial";
+	}
+	function setup_onload(){
+	if (wholedata["motifs"]>0){
+		printOutput();
+		motifLegend();
+		insertCircleplot();
+		insertFullPartition();
+		createModuleInfoTable();
+		addOnclickEvents();
+	}
+	else {
+		$("motifs").innerHTML="<p> No motifs found</p>";
+		$("seqmotifs").innerHTML = "<p>No motifs on sequences</p>";
+		}
+	}
+	setup_onload();
+	window.onbeforeunload = function () {
+		window.scrollTo(0, 0);
+	}
+	/*
+	window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+	}
+	*/
+	</script>
+
+	<style>
+		h2.normal{
+	font-family: "Times New Roman";
+	}
+
+	.dropDown {
+    cursor: pointer;
+    cursor: hand;
+	}
+	.arrow-right {
+    width: 0;
+    height: 0;
+    margin-top: 3px;
+    margin-right: 5px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 10px solid #372528;
+    float: left;
+	}
+
+	.arrow-down {
+    width: 0;
+    height: 0;
+    margin-top: 3px;
+    margin-right: 5px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #372528;
+    float: left;
+	}
+	.onestar::after{
+		content: "*";
+		color: "#000000";
+	}
+	.twostar::after{
+		content: "**";
+		color: "#000000";	
+	}
+	.threestar::after{
+		content: "***";
+		color: "#000000";
+	}
+	</style>
+	</body>
+</html>

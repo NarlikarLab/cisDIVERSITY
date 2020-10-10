@@ -1,0 +1,84 @@
+
+cisDIVERSITY is a module discovery tool used for finding diverse sequence architectures, each one characterized by presence or absence of de novo motifs.
+
+The code is primarily written in C and needs gcc with OpenMP support to compile.
+
+The following packages need to be installed in order to view the output of cisDIVERSITY:
+ * Python 2.7+ (Not compatible with Python 3.x)
+ * python-numpy
+ * python-ctypes
+ * python-re
+ * R > 3.3
+ * R package corrplot
+
+
+INSTALLATION:
+
+cisDIVERSITY is freely available at https://github.com/NarlikarLab/cisDIVERSITY. Execute the following commands to download and install DIVERSITY:
+wget https://github.com/NarlikarLab/cisDIVERSITY/archive/cisdiversity.tar.gz
+tar -xvf cisdiversity.tar.gz
+cd cisDIVERSITY
+make
+
+To execute cisDIVERSITY from anywhere export the path to cisDIVERSITY to the PATH variable.
+
+To learn multiple modules using cisDIVERSITY:
+
+(path to cisDIVERSITY)/learnDiverseModules [options]
+
+USAGE
+
+	-f filename
+	   Compulsory. Data file for which motifs are to be identified. File must be in fasta format.
+
+	-o directory
+	   Compulsory. New directory name for the output. If it exists or cannot be created then an error will be returned. 
+
+Change these if you think you have more than default modules/motifs in your data:
+	-r maximum number of regulatory programs/modules (default: 15)
+	-m maximum number of motifs (default: 30)
+
+Change these if you want a quick (& dirty) or slow (& better) solution:
+	-i maximum number of iterations per run (default: 5000)
+	-t number of distinct runs to choose best model from (default: 10)
+	-n number of processors (cores) to use (default: 2)
+	-v 0,1,2 (verbosity: 0 to print little, 1 for progress, which is the default, and 2 for that and log likelihoods at each iteration -- can create large files)
+
+Change these if you want to change the initialization/hyperparameters of the model:
+	-a random seed (default: 1)
+	-s starting width of each motif (default: 12)
+	-p pseudocount for the PWMs (default: 0.100000)
+	-g pseudocount for the modules (default: 1.000000)
+	-Y pseudocount for a modules to have a PWM (default: 0.100000)
+	-N pseudocount for a modules to NOT have a PWM (default: 0.100000)
+
+Change these only if you read the paper carefully and you know what you are doing:
+	-w minimum width of a motif (default: 6)
+	-W maximum width of a motif (default: 200)
+	-S minimum number of sites to create a motif (default: 20)
+	-C minimum number of sequences in a regulatory program/module (default: 20)
+	-e (if low information sequence signatures to be removed; default is to keep all)
+	-R (if motifs should be searched for on a same strand; default: allow reverse complements)
+	-b order of the Markov model for the background sequences (default: 2)
+
+EXAMPLES
+	The following examples illustrate the usage of the options.
+
+	To run with all the default options (which will use two cores):
+	   learnDiverseModules -f example.fa -o output
+
+	To run for maximum 10 modules and maximum 20 de novo motifs and use a single core:
+	   learnDiverseModules -f example.fa -o output -m 20 -r 10 -n 1
+
+	To find list of options:
+	   learnDiverseModules -h
+
+
+OUTPUT
+	At the end of the execution, a bestSolution directory will be created within the user-defined output directory. All other (lower scoring models) will be stored in run_<number> directories. Each of these directories will contain the following files:
+	(1) "pssm.txt": this stores information about the learned modules in terms of motifs and all the motifs as PWMs. This information is used to create the circle plot in "circlePlot.png".
+	(2) "info.txt": this stores the module and motif information for each region. The first column stores the sequence number, second is the id of the sequence as per the fasta file, third is the module number that the sequence belongs to, fields 5 through the end show the position within the sequence of each motif. If the motif is absent NA is used and if it is on the opposite strand the position is preceded with a "-" sign. The information in this file is used to create the "fullPartition.png" plot.
+	(3) "progress.txt": this simply stores the current state of the model, during the execution.
+	(4) "sites_<number>.txt": all sites contributing to motif_<number>. "sites_<number>.pdf" and "sites_<number>.png" are corresponding images files of the motif logo.
+	(5) "revsites_<number>.txt": as above, but in the reverse orientation.
+	(6) "cisDiversity.html" and "Module_<number>": HTML output of the full model and module_<number>, respectively.
