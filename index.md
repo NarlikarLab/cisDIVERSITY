@@ -14,7 +14,8 @@
 <font color="#000000">
 
 <h2>Prerequisites</h2>
-The code is primarily written in C and needs gcc with OpenMP support to compile.
+The code is primarily written in C and needs gcc with OpenMP support to compile. <br>
+
 <ul>
  <li> Python 2.7+ (Not compatible with Python 3.x)</li>
  <li> python-numpy </li>
