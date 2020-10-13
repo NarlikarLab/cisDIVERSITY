@@ -8,7 +8,7 @@ The following packages need to be installed in order to view the output of cisDI
  * python-numpy
  * python-ctypes
  * python-re
- * R > 3.3
+ * R > 3.0
  * R package corrplot
 
 
