@@ -12,9 +12,9 @@
 
 <body bgcolor="#f5fffa">
 <font color="#000000">
-The code is primarily written in C and needs gcc with OpenMP support to compile.
 
 <h2>Prerequisites</h2>
+The code is primarily written in C and needs gcc with OpenMP support to compile.
 <ul>
  <li> Python 2.7+ (Not compatible with Python 3.x)</li>
  <li> python-numpy </li>
@@ -25,7 +25,7 @@ The code is primarily written in C and needs gcc with OpenMP support to compile.
 </ul>
 
 <h2>Download</h2>
-<b>NPLB</b> can be downloaded from <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/master.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz</a>. It can be run on any Mac or Linux system.
+<b>cisDIVERSITY</b> can be downloaded from <a href="https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz">https://github.com/NarlikarLab/cisDIVERSITY/archive/v1.0.tar.gz</a>. It can be run on any Mac or Linux system.
 
 <h2>Installation</h2>
 In order to download and install <b>cisDIVERSITY</b>, execute the following steps:
