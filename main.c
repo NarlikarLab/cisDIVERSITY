@@ -127,7 +127,6 @@ void parseOpts(int argc, char **argv,  char *f,char *o,structForAllConstants *al
 {
     int opt;
     int a;
-    double b;
     while((opt = getopt(argc, argv, "f:o:r:m:i:t:w:W:s:v:RM:a:P:hep:g:b:S:C:c:Y:N:n:x:y:z:")) > 0)
     {
 	switch(opt) 
@@ -174,14 +173,14 @@ void parseOpts(int argc, char **argv,  char *f,char *o,structForAllConstants *al
 	    break;
 	case 'w':
 	    a = atoi(optarg);
-	    if(a < allCons -> minw | a > allCons -> maxw)
+	    if(a < allCons -> minw || a > allCons -> maxw)
 		fprintf(stderr,"Minimum width %d not allowed, using default of %d\n", a,allCons -> minw);
 	    else
 		allCons -> minw = a;
 	    break;
 	case 'W':
 	    a = atoi(optarg);
-	    if(a > allCons -> maxw |a < allCons -> minw )
+	    if(a > allCons -> maxw || a < allCons -> minw )
 		fprintf(stderr,"Maximum width %d not allowed, using default of %d\n", a, allCons -> maxw);
 	    else
 		allCons -> maxw = a;
@@ -196,7 +195,7 @@ void parseOpts(int argc, char **argv,  char *f,char *o,structForAllConstants *al
 	    break;
 	case 's':
 	    a = atoi(optarg);
-	    if(a < allCons -> minw  | a > allCons -> maxw)
+	    if(a < allCons -> minw  || a > allCons -> maxw)
 		fprintf(stderr,"Starting width %d not allowed, using default of %d\n", a,allCons -> initw);
 	    else
 		allCons -> initw = a;
@@ -265,7 +264,7 @@ void *forThreading(void *arguments)
     char pssmfile[1000] = {'\0'};
     char command[10000] = {'\0'};
     modelStruct *M, *learned, *cleanedUp;
-    FILE *info, *pssm, *sets, *prog;
+    FILE *info, *pssm, *prog;
     FILE **sites;
     double current;
     FILE *like;
@@ -275,7 +274,6 @@ void *forThreading(void *arguments)
     unsigned int *seeds;
     info = NULL;
     pssm = NULL;
-    sets = NULL;
     prog= NULL;
     seeds = ALLOC(sizeof(unsigned int) * (args -> tEnd - args -> tStart));
     for(i = args -> tStart; i< args -> tEnd; i++)
@@ -370,7 +368,7 @@ void *forThreading(void *arguments)
 	printSites(args -> X, cleanedUp,sites );
 	for(k =0 ;k< cleanedUp -> numOfMotifs; k++)
 	{
-	    if(! sites[k] == 0)
+	    if(! (sites[k] == 0))
 		fclose(sites[k]);
 	}
 	memset(sites ,0,sizeof(FILE * ) * cleanedUp -> numOfMotifs);
@@ -389,7 +387,7 @@ void *forThreading(void *arguments)
 	printRevSites(args -> X, cleanedUp,sites );
 	for(k =0 ;k< cleanedUp -> numOfMotifs; k++)
 	{
-	    if(! sites[k] == 0)
+	    if(! (sites[k] == 0))
 		fclose(sites[k]);
 	}
 	free(sites);
@@ -425,21 +423,16 @@ int main(int argc, char **argv)
     double **backProbs;
     int i;
     char outputprefix[1000] = {'\0'};
-    char infofile[1000] = {'\0'};
-    char pssmfile[1000] = {'\0'};
     char setsfile[1000] = {'\0'};
     char command[1000];
     FILE  *source;
-    FILE *info, *pssm, *sets;
-    double current;
+    FILE *sets;
     structForAllConstants *allCons;
-    pthread_t some_thread;
     threadStruct **argsForThread; //[NUM_THREADS];
     pthread_t *threads; //[ NUM_THREADS ];
     int result_code;
     int tasks, threadCount,tStart;
     double best = -DBL_MAX;
-    int bestRun;
     modelStruct *M;
     
     char *lastslash=NULL;
@@ -516,7 +509,6 @@ int main(int argc, char **argv)
 	if(best < argsForThread[i] -> best)
 	{
 	    best = argsForThread[i] -> best;
-	    bestRun = argsForThread[i] -> bestRun;
 	}
 	printf( "globalbest is %lf at run %d\n", globalBest,globalBestRun );
     

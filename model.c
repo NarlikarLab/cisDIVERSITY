@@ -12,9 +12,8 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
     int change;
     int noimprovement;
     double temp = 1;
-    int trial, newi;
+    int newi;
     int initW;
-    int Iiter =0;
     int inits ; //20;
 
     int *givenMotifs;
@@ -142,7 +141,7 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
 	}
 	if(allCons -> verbose >= 1)
 	{
-	    fprintf(fp2, " (%d: %lf: %d); ",iter, current, noimprovement);
+	    fprintf(fp2, ".");
 
 	}
 
@@ -218,7 +217,7 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
     justCopyModel(best, eModel);
 
     noimprovement = 1;
-    if(allCons -> verbose >=1) fprintf(fp2, "hill climbing: \n");
+    if(allCons -> verbose >=1) fprintf(fp2, "\nDoing hill climbing\n");
     while(noimprovement == 1)
     {
 	noimprovement = 0;
@@ -240,7 +239,7 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
 		    }
 		    bestSoFar = current;
 		    justCopyModel( eModel,best);
-		    if(allCons -> verbose >=1) fprintf(fp2, "%lf ", current);
+		    if(allCons -> verbose >=1) fprintf(fp2, ".");
 		    noimprovement = 1;
 		}
 		
@@ -259,7 +258,7 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
 		}
 		bestSoFar = current;
 		justCopyModel( eModel,best);
-		if(allCons -> verbose >=1) fprintf(fp2, "%lf ", current);
+		if(allCons -> verbose >=1) fprintf(fp2, ".");
 		noimprovement = 1;
 	    }
 	}
@@ -282,7 +281,7 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
 		}
 		bestSoFar = current;
 		justCopyModel( eModel,best);
-		if(allCons -> verbose >=1) fprintf(fp2, "%lf ", current);
+		if(allCons -> verbose >=1) fprintf(fp2, ".");
 		noimprovement = 1;
 
 	    }
@@ -301,14 +300,14 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
 		}
 		bestSoFar = current;
 		justCopyModel( eModel,best);
-		if(allCons -> verbose >=1) fprintf(fp2, "%lf ", current);
+		if(allCons -> verbose >=1) fprintf(fp2, ".");
 		noimprovement = 1;
 	    }
 	    
 	}
 	if(fp1 != NULL) fprintf(fp1, "0 %lf\n", current);
     }
-    if(allCons -> verbose >=1) fprintf(fp2,"Best before cleaning: %lf\n", fullPosterior(X, best,allCons));
+    if(allCons -> verbose >=1) fprintf(fp2,"\nBest before cleaning: %lf\n", fullPosterior(X, best,allCons));
 
     
     cleanUp(best, initW,allCons);
@@ -335,7 +334,7 @@ modelStruct *learnModel(FASTA *X, modelStruct *eModel, FILE *fp1, FILE *fp2,stru
 
 	if(allCons -> verbose >=1)
 	{
-	    fprintf(fp2,"*****************************posterior after randomizing for %d programs: %lf\n",newi ,current);
+	    fprintf(fp2,"posterior after randomizing for %d programs: %lf\n",newi ,current);
 	    fflush(fp2);
 	}
 	if(newi == 1) continue;

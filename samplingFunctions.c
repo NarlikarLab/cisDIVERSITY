@@ -10,9 +10,6 @@ int samplezAO(FASTA *X, modelStruct *eModel, int mot, int seq,double temp,struct
     int new;
     int change;
     int n, *overlaps;
-    int who = RUSAGE_SELF; 
-    struct rusage usage; 
-    int ret; 
 
 
     if (X->nonRepLength[seq] == 0) X->nonRepLength[seq] = 1;
