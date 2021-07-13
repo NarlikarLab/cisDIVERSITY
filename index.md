@@ -8,7 +8,7 @@
 
 <body bgcolor="#f5fffa">
 <font color="#000000">
-<b>cisDIVERSITTY<b> is a module discovery tool used for finding diverse sequence architectures, each one characterized by presence or absence of de novo motifs.
+<b>cisDIVERSITTY</b> is a module discovery tool used for finding diverse sequence architectures, each one characterized by presence or absence of de novo motifs.
 
 
 <h2>Prerequisites</h2>
