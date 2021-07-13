@@ -3,13 +3,13 @@
 <div style="background-color:#003366; text-align:center">
 <header>
 <h1><font color="#fafafa">cisDIVERSITY</font></h1>
-
+</header>
 </div>
 
 <body bgcolor="#f5fffa">
 <font color="#000000">
 <b>cisDIVERSITTY<b> is a module discovery tool used for finding diverse sequence architectures, each one characterized by presence or absence of de novo motifs.
-</header>
+
 
 <h2>Prerequisites</h2>
 The code is primarily written in C and needs gcc with OpenMP support to compile. <br>
