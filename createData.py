@@ -1,6 +1,6 @@
 '''
 Please uncomment the last two statements to copy the 
-moduleDiversity.html and md.js files in the current directory
+cisDiversity.html and md.js files in the current directory
 '''
 
 import sys,os,math
@@ -8,8 +8,6 @@ import numpy as np
 import createHTML as ch
 import collections,re
 import commands
-#from scipy.stats import hypergeom
-
 
 def reqformat(num,noOfdigits):
     noOfdigits = int(noOfdigits)
@@ -43,48 +41,6 @@ def areDifferentColors(colorarr,i):
             break
     return flag
 
-# def gethypergeomPvals(allmodules):
-#     modules = allmodules.keys()
-#     # count all the instances of motif present
-#     mods= allmodules.keys()
-#     seqs=allmodules[mods[0]].keys()
-#     noOfmotifs=len(allmodules[mods[0]][seqs[0]])
-#     #moduleWiseVals = np.zeros((len(modules),noOfmotifs),dtype=float)
-#     moduleWiseVals = {}
-#     #totSeqsModule = np.zeros(len(modules),dtype=int)
-#     totSeqsModule = {}
-    
-#     for m in modules:
-#         totSeqsModule[m] = 0
-#         moduleWiseVals[m] = np.zeros(noOfmotifs,dtype=float)
-    
-#     totMotOccurrences = np.zeros(noOfmotifs,dtype=int)
-#     totSeqs=0
-#     for m in modules:
-#         for s in allmodules[m]:
-#             totSeqsModule[m]+=1
-#             for i in range(noOfmotifs):
-#                 if (allmodules[m][s][i] !="NA"):
-#                     moduleWiseVals[m][i]+=1
-#                     totMotOccurrences[i]+=1
-#     totSeqs=np.sum(totSeqsModule.values())
-#     hypergeomVals = {}
-#     for m in modules:
-#         hypergeomVals[m] = np.zeros(noOfmotifs,dtype=float)
-#     for m in modules:
-#         #print "module ",m
-#         for i in range(noOfmotifs):
-#             M=totSeqs                 # Total number of objects in pop
-#             n=totMotOccurrences[i]    # Total number of Motif_i among all the objects in pop
-#             N=totSeqsModule[m]        # Total number of objects in sample
-#             x=moduleWiseVals[m][i]    # Total number of Motif_i among all the objects in sample
-            
-#             hypergeomVals[m][i] = 1- hypergeom.cdf(x-1,M,n,N) # prob of getting x or more objects in sample
-#             #print x,M,n,N,hypergeomVals[m][i]
-        
-#     del totMotOccurrences,totSeqsModule,moduleWiseVals
-#     return hypergeomVals
-
 def makejsVars(solutionDir,fastafile,infofile,outdir):
     noOfSeqs = 0
     noOfMotifs = 0
@@ -99,8 +55,9 @@ def makejsVars(solutionDir,fastafile,infofile,outdir):
     seqheaders = np.zeros(count,dtype=object)
     seqlens = collections.OrderedDict()
     il = info.readline()
-    ill = il.strip('\n').split('\t')[:-1]
+    ill = filter(None,il.strip().split('\t'))
     noOfMotifs = len(ill)-3
+    
     motifSeqs = {}
     
     for i in range(1,noOfMotifs+1):
@@ -126,19 +83,20 @@ def makejsVars(solutionDir,fastafile,infofile,outdir):
     noOfdigits = math.floor(math.log10(noOfMotifs))+1
     ff = open(fastafile,'r')
     fl = ff.readline()
-    flag = 0
+    sl = 0
+    header = ''
     while fl:
-        if fl[0]=='>':
-            header = fl[1:-1]
-            flag =1
-            fl = ff.readline()
-        elif flag==1:
-            sl = len(fl.strip('\n'))
-            seqlens[header]= sl
-            flag=0
-            fl = ff.readline()
+        if fl[0] == '>':
+            if header != '':
+                seqlens[header] = sl
+            header = fl[1:].strip()
+            sl = 0
+        else:
+            sl += len(fl.strip())
+        fl = ff.readline()
+    seqlens[header] = sl
     ff.close()
-
+    
     #hypergeomVals = gethypergeomPvals(allmodules)
     
     motifwidths = np.zeros(noOfMotifs,dtype=int)
@@ -168,10 +126,6 @@ def makejsVars(solutionDir,fastafile,infofile,outdir):
         moduleMotifColors[m] = np.zeros(noOfMotifs,dtype='S7')
     for i in range(noOfModules):
         for j in range(noOfMotifs):
-            # if (hypergeomVals[modules[i]][j] < 0.00001):
-            #     moduleMotifColors[modules[i]][j] = "#FF0000"
-            # else:
-            #     moduleMotifColors[modules[i]][j] = "#008000"
             moduleMotifColors[modules[i]][j] = "#FF0000"
             
     logoSizes = np.zeros((noOfMotifs,2),dtype=int)
@@ -185,11 +139,6 @@ def makejsVars(solutionDir,fastafile,infofile,outdir):
         w,h = map(int,re.findall('(\d+)\s*x\s*(\d+)',out)[-1])
         logoSizes[i][0] = w/2.5
         logoSizes[i][1] = h/2
-    # for i in range(noOfMotifs):
-    #     h = 75
-    #     w = motifwidths[i]*16.4
-    #     logoSizes[i][0] = w
-    #     logoSizes[i][1] = h
 
     
     circplot = solutionDir + '/circlePlot.png'
@@ -197,16 +146,22 @@ def makejsVars(solutionDir,fastafile,infofile,outdir):
     if status!=0:
             print status,out
             exit()
-    w,h = map(int,re.findall('(\d+)\s*x\s*(\d+)',out)[-1])
-    circplot_size = (w,h)
+    elif "No such file" in out:
+            circplot_size = (0,0)
+    else:
+            w,h = map(int,re.findall('(\d+)\s*x\s*(\d+)',out)[-1])
+            circplot_size = (w,h)
 
     fullpartition = solutionDir + '/fullPartition.png'
     (status,out)=commands.getstatusoutput("file "+fullpartition)
     if status!=0:
             print status,out
             exit()
-    w,h = map(int,re.findall('(\d+)\s*x\s*(\d+)',out)[-1])
-    fpart_size = (w,h)
+    elif "No such file" in out:
+            fpart_size = (0,0)
+    else:
+            w,h = map(int,re.findall('(\d+)\s*x\s*(\d+)',out)[-1])
+            fpart_size = (w,h)
 
     allsizes = (logoSizes,circplot_size,fpart_size)
     
@@ -222,10 +177,18 @@ def main():
     solutionDir = sys.argv[1]
     fastafile = sys.argv[2]
     basepath = sys.argv[3]
-    #outdir = sys.argv[3]
     outdir = solutionDir
     infofile = solutionDir+'/info.txt'
-    os.system("cp " + basepath +"/md.js "+outdir)
-    os.system("cp " + basepath +"/cisDiversity.html "+outdir)
-    makejsVars(solutionDir,fastafile,infofile,outdir)
+
+    # check if there are no motifs in the output. Then copy different files
+    info = open(infofile)
+    il = filter(None,info.readline().strip().split('\t'))
+    nm = len(il)-3
+    info.close()
+    if nm == 0:
+        os.system("cp "+basepath+"/cisDiversity_nomotif.html "+outdir+"/cisDiversity.html")
+    else:
+        os.system("cp " + basepath +"/md.js "+outdir)
+        os.system("cp " + basepath +"/cisDiversity.html "+outdir)
+        makejsVars(solutionDir,fastafile,infofile,outdir)
 main()

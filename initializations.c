@@ -148,7 +148,9 @@ FASTA *readFASTA(char *filename,structForAllConstants *allCons )
 	else
 	{
 	    if(c == '\n')
-		continue;
+	      continue;
+	    if(c == '\r')
+	      continue;
 	    length++;
 	}
     }
@@ -191,7 +193,8 @@ FASTA *readFASTA(char *filename,structForAllConstants *allCons )
 		fileError(filename, " has too long a header");
 	    }
 	    i++;
-	    strtok(buffer,"\n");
+	    //strtok(buffer,"\n");
+	    buffer[strcspn(buffer,"\r\n")] = 0;
 	    strcpy(sequences -> header[i], buffer);
 	    
 	    sequences -> length[i] = 0;
@@ -222,7 +225,9 @@ FASTA *readFASTA(char *filename,structForAllConstants *allCons )
 	    sequences -> nonRepLength[i]++;
 	    break;
 	case '\n':
-	    break;		
+	    break;
+	case '\r':
+	    break;
 	default:
 	    sequences -> seq[i][sequences -> length[i]] = 4;
 	    sequences -> length[i]++;

@@ -56,11 +56,18 @@ fin.close()
 fin = open(info)
 ffa = open(fasta)
 fout1 = open(outpath + "/sitesData.txt","w")
+
+fastal = ffa.readline()
+fastal = ffa.readline()
 for line in fin:
 	line = line.strip()
 	words = line.split("\t")
-	fasta = ffa.readline()
-	fasta = ffa.readline()
+	fasta = ''
+        while fastal != '' and fastal[0] != '>':
+                fasta += fastal.strip()
+	        fastal = ffa.readline()
+        fastal = ffa.readline()
+
 	out = ""
 	for i in range(3,len(words)):
 		c = i - 3
@@ -73,12 +80,14 @@ for line in fin:
 			if c in toreverse:
 				words[i] = -1 * int(words[i])
 			if(int(words[i]) < 0):
+                                #print fasta
 				out = out + reverseComp(fasta[abs(int(words[i])):abs(int(words[i]))+pssmArray[c]])
 			else:
 				out = out + fasta[abs(int(words[i])):abs(int(words[i]))+pssmArray[c]]
 		out = out + "X" 
 	fout1.write(convertToNumbers(out[:-2]) + "\n")
 	fout1.flush()
+
 
 fin.close()
 ffa.close()

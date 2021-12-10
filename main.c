@@ -253,6 +253,37 @@ void parseOpts(int argc, char **argv,  char *f,char *o,structForAllConstants *al
     }
 }
 
+int checkFASTA(char *fastafile){
+  FILE *fp;
+  int nonreps = 0,check=1;
+  char c;
+  char buffer[HEADERLIMIT];
+  if (NULL == (fp = fopen(fastafile,"r"))) fileError(fastafile," is not readable");
+  while (!feof(fp)){
+    fscanf(fp,"%c",&c);
+    if (c == '>'){
+      if (!(fgets(buffer,HEADERLIMIT,fp))) fileError(fastafile, " has too long a header");
+      nonreps = 0;
+    }
+    else{
+      if (c == '\n')
+	{
+	  if (nonreps < 20) {
+	    //printf("Sequence %s has less than 20 non repeat characters\n",buffer);
+	    check = 0;
+	  }
+	}
+      else if (c != 'N'){
+	nonreps++;
+      }
+    }
+
+  }
+  fclose(fp);
+  return (check);
+}
+
+
 
 void *forThreading(void *arguments)
 {
@@ -268,10 +299,12 @@ void *forThreading(void *arguments)
     FILE **sites;
     double current;
     FILE *like;
-    int k;
+    int i,k;
     char sitesfiles[100][1000];
-    int i;
+    int validMotifs = 0;
     unsigned int *seeds;
+    
+    
     info = NULL;
     pssm = NULL;
     prog= NULL;
@@ -364,6 +397,7 @@ void *forThreading(void *arguments)
 		sprintf(sitesfiles[k],"%s/sites_%d.txt",trialprefix, k+1);
 	    if( NULL == (sites[k] = fopen(sitesfiles[k], "w")))
 		fileError(infofile, "is not writable");
+	    validMotifs++;
 	}
 	printSites(args -> X, cleanedUp,sites );
 	for(k =0 ;k< cleanedUp -> numOfMotifs; k++)
@@ -390,20 +424,30 @@ void *forThreading(void *arguments)
 	    if(! (sites[k] == 0))
 		fclose(sites[k]);
 	}
-	free(sites);
-	freeModel(cleanedUp);
-	freeModel(M);
+	
+	
 	sprintf(command,"python %s/createLogos.py %s %s",args -> allCons -> basepath,trialprefix, trialprefix);
 	sprintf(command,"python %s/createLogosPNG.py %s %s",args -> allCons -> basepath,trialprefix, trialprefix);
 	if(args -> allCons -> verbose >= 1) fprintf(prog,"%s\n",command);
 	system(command);
-	sprintf(command, "python %s/postProcessNoOptions.py %s %s %s %s ", args -> allCons -> basepath, fastafile, infofile, pssmfile, trialprefix);
-	    
-	if(args -> allCons -> verbose >= 1) fprintf(prog,"%s\n",command);
-	system(command);
-	sprintf(command, "Rscript  %s/createPlots.r %s",args -> allCons -> basepath,trialprefix);
-	if(args -> allCons -> verbose >= 1) fprintf(prog,"%s\n",command);
-	system(command);
+
+
+	if (validMotifs > 0){
+	  sprintf(command, "python %s/postProcessNoOptions.py %s %s %s %s ", args -> allCons -> basepath, fastafile, infofile, pssmfile, trialprefix);    
+	  if(args -> allCons -> verbose >= 1) fprintf(prog,"%s\n",command);
+	  system(command);
+	  sprintf(command, "Rscript  %s/createPlots.r %s",args -> allCons -> basepath,trialprefix);
+	  if(args -> allCons -> verbose >= 1) fprintf(prog,"%s\n",command);
+	  system(command);
+	}
+
+
+	/*** Rearranged freeing of model ***/
+	free(sites);
+	freeModel(cleanedUp);
+	freeModel(M);
+	
+	
 	sprintf(command, "python  %s/createData.py %s %s %s",args -> allCons -> basepath,trialprefix,fastafile,args -> allCons -> basepath);
 	if(args -> allCons -> verbose >= 1) fprintf(prog,"%s\n",command);
 	system(command);
@@ -437,6 +481,8 @@ int main(int argc, char **argv)
     
     char *lastslash=NULL;
 
+    int check;
+
     allCons = ALLOC(sizeof(structForAllConstants));
 
     setAllConst(allCons);
@@ -458,13 +504,24 @@ int main(int argc, char **argv)
 	fileError(fastafile, "is not readable");
     fclose(source);
     initialChecks(allCons);
+    check = checkFASTA(fastafile);
+    if (!check) {
+      printf("Every sequence must have at least 20 non repeat characters\n");
+      exit(0);
+    }
+    
+
+
+    
     if(mkdir(outputprefix,0777) == -1) fileError(outputprefix, " directory cannot be created");
     sprintf(setsfile,"%ssettings.txt",outputprefix);
     if( NULL == (sets = fopen(setsfile, "w")))
 	fileError(setsfile, "is not writable");
     printSettings(sets, fastafile, allCons);
     fclose(sets);
+
     X = readFASTA(fastafile,allCons);
+
     backProbs  = getBackground(X,allCons);
     setBackTable(X, backProbs,allCons -> maxw);
 

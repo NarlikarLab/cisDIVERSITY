@@ -1,4 +1,6 @@
-suppressMessages(library(corrplot))
+
+#suppressMessages(library(corrplot))
+source("corrplotC/corrplotC.R")
 
 to.list <- function( x, y ) { lapply( (unique( y )), function( i ) { which( x == i ) } ) }
 newto.list <- function( x, y, z ) { lapply(z , function( i ) { x[which( y == i )] } ) }
@@ -47,23 +49,24 @@ garbage = dev.off()
 
 
 
-sites = info[,4:dim(info)[2]]
+sites = as.data.frame(info[,4:dim(info)[2]])
 sites[!is.na(sites)] = 1
 sites[is.na(sites)] = 0
 
 k = matrix(nrow=length(unique(b)),ncol=dim(sites)[2])
 
 for(i in 1:length(unique(b))) {
-    k[i,] = apply(sites[b==i,],2,mean)
+    k[i,] = apply(as.data.frame(sites[b==i,]),2,mean)
 }
+
 
 png(paste(args[1],"/circlePlot.png",sep=""),h=dim(k)[1]/2 , w = dim(k)[2]/2 ,units="in",res=300)
 par(xpd=TRUE)
 newk = k
 newk[newk == 0] = NA
-rownames(newk) = paste("module",c(1:dim(newk)[1]))
-colnames(newk) = paste("motif",c(1:dim(newk)[2]))
-corrplot(newk,is.corr=F,na.label.col="white",cl.pos="b",cl.ratio=0.2,cl.length=3,cl.cex=0.5,outline=T,tl.cex=0.7,tl.col="darkgreen")#,col=col2(20))
+#rownames(newk) = paste("module",c(1:dim(newk)[1]))
+#colnames(newk) = paste("motif",c(1:dim(newk)[2]))
+corrplotC(newk,is.corr=F,na.label.col="white",cl.pos="b",cl.ratio=0.2,cl.length=3,cl.cex=0.5,outline=T,tl.cex=0.7,tl.col="darkgreen")#,col=col2(20))
 points(-10, 7, pch = 8,col="red")
 garbage = dev.off()
 

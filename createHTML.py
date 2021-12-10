@@ -53,9 +53,11 @@ def writejsVars(noOfSeqs,noOfMotifs,noOfModules,minmotpercent,moduleMotifColors,
     #logoSizes
     logoSizes = allsizes[0]
     jsf.write("\nvar logoSizes={ ")
+    i = 0
     for i in range(noOfMotifs-1):
         jsf.write(str(i+1)+": ["+str(logoSizes[i][0])+" ,"+str(logoSizes[i][1])+"],\n")
-    i=i+1
+    if i>0:
+        i=i+1
     jsf.write(str(i+1)+": ["+str(logoSizes[i][0])+" ,"+str(logoSizes[i][1])+"]\n};")
 
     #cplot
@@ -99,6 +101,7 @@ def writejsVars(noOfSeqs,noOfMotifs,noOfModules,minmotpercent,moduleMotifColors,
     #motifSeqs
     jsf.write("\n\nvar motifSeqs={\n")
     motifs = sorted(motifSeqs.keys())
+    i = 0
     for i in range(len(motifs)-1):
         k = motifs[i]
         jsf.write(str(k)+": "+str(motifSeqs[k])+",\n")

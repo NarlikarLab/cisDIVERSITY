@@ -15,4 +15,4 @@ learnDiverseModules: main.o model.o initializations.o littleHelpers.o  probabili
 	$(CC) -o learnDiverseModules main.o model.o initializations.o littleHelpers.o probabilityFunctions.o printing.o samplingFunctions.o $(LFLAGS)
 
 clean:
-	rm -f *.o
+	rm -f *.o *.pyc
